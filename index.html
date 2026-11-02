@@ -1,1 +1,215 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenTouchline</title>
+<style>
+:root {
+  --bg: #101410;
+  --panel: #191f19;
+  --panel2: #222a22;
+  --green: #8bc34a;
+  --text: #f0f3ed;
+  --muted: #9ba69a;
+  --border: #303a30;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 225px;
+  background: #151b15;
+  border-right: 1px solid var(--border);
+  padding: 25px 15px;
+}
+.logo {
+  font-size: 23px;
+  font-weight: bold;
+  margin: 0 0 6px;
+}
+.logo span { color: var(--green); }
+.tagline {
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 35px;
+}
+.nav-label {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin: 20px 10px 10px;
+}
+.nav button {
+  width: 100%;
+  padding: 12px;
+  margin: 3px 0;
+  background: transparent;
+  color: #cbd3c8;
+  border: 0;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+.nav button:hover, .nav button.active {
+  background: #293629;
+  color: var(--green);
+}
+main { flex: 1; padding: 35px; min-width: 0; }
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+h1 { margin: 0; font-size: 27px; }
+.subtitle { color: var(--muted); margin-top: 7px; font-size: 13px; }
+.status {
+  background: #30271b;
+  color: #e5b66d;
+  border: 1px solid #5a4528;
+  padding: 9px 13px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+.welcome {
+  background: linear-gradient(110deg,#263b25,#19251a);
+  border: 1px solid #3b5538;
+  border-radius: 12px;
+  padding: 27px;
+  margin-bottom: 22px;
+}
+.welcome h2 { margin: 0 0 10px; font-size: 21px; }
+.welcome p { color: #c1cfbc; margin: 0; line-height: 1.6; }
+.section-title { font-size: 16px; margin: 28px 0 14px; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 15px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 10px;
+  min-height: 115px;
+}
+.card .number { color: var(--green); font-size: 23px; font-weight: bold; }
+.card .label { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 15px;
+}
+.panel p { color: var(--muted); line-height: 1.6; }
+.panel button {
+  background: var(--green);
+  color: #101410;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+footer { color: #687368; font-size: 11px; margin-top: 35px; }
+@media(max-width:750px) {
+  .app { display: block; }
+  .sidebar { width: 100%; padding: 15px; }
+  .tagline { margin-bottom: 12px; }
+  .nav { display: flex; overflow-x: auto; gap: 5px; }
+  .nav-label { display: none; }
+  .nav button { white-space: nowrap; width: auto; }
+  main { padding: 20px 15px; }
+  .cards { grid-template-columns: 1fr; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">OPEN<span>TOUCHLINE</span></div>
+    <div class="tagline">Take control of your save.</div>
+    <div class="nav-label">MANAGEMENT</div>
+    <nav class="nav">
+      <button class="active" onclick="showPage('Dashboard',this)">Dashboard</button>
+      <button onclick="showPage('Players',this)">Players</button>
+      <button onclick="showPage('Staff',this)">Staff</button>
+      <button onclick="showPage('Clubs',this)">Clubs</button>
+      <button onclick="showPage('Competitions',this)">Competitions</button>
+      <button onclick="showPage('Finances',this)">Finances</button>
+      <button onclick="showPage('World',this)">World</button>
+      <button onclick="showPage('History',this)">History</button>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="subtitle">Your Football Manager control centre</div>
+      </div>
+      <div class="status">● Game not connected</div>
+    </div>
+
+    <div id="content">
+      <section class="welcome">
+        <h2>Welcome to OpenTouchline</h2>
+        <p>Your save. Your decisions. Your touchline.
+        Manage your football world from one place.</p>
+      </section>
+
+      <div class="section-title">Overview</div>
+      <div class="cards">
+        <div class="card"><div class="number">—</div><div class="label">Players loaded</div></div>
+        <div class="card"><div class="number">—</div><div class="label">Clubs loaded</div></div>
+        <div class="card"><div class="number">—</div><div class="label">Game status</div></div>
+      </div>
+
+      <div class="section-title">Game connection</div>
+      <div class="panel">
+        <strong>Football Manager 27</strong>
+        <p>OpenTouchline is not connected to a game yet. Game connection and editing features are planned for a later development stage.</p>
+        <button onclick="alert('Game connection is coming in a future update.')">Connection settings</button>
+      </div>
+    </div>
+
+    <footer>OPENTOUCHLINE · FREE AND OPEN SOURCE</footer>
+  </main>
+</div>
+
+<script>
+function showPage(page, button) {
+  document.getElementById('pageTitle').textContent = page;
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  button.classList.add('active');
+
+  const content = document.getElementById('content');
+  if (page === 'Dashboard') {
+    location.reload();
+    return;
+  }
+  content.innerHTML = `
+    <section class="welcome">
+      <h2>${page}</h2>
+      <p>The ${page.toLowerCase()} management section is planned for a future OpenTouchline update.</p>
+    </section>
+    <div class="panel">
+      <strong>Coming soon</strong>
+      <p>This section will become functional as we build the editor.</p>
+    </div>`;
+}
+</script>
+</body>
+</html>
+
