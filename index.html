@@ -3,247 +3,1330 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenTouchline</title>
+
 <style>
 :root {
- --bg:#0e130f; --side:#141c16; --panel:#19231b;
- --line:#2b3a2e; --green:#a4d65e; --text:#edf3eb;
- --muted:#94a394; --amber:#e4bd70;
+    --bg: #0e130f;
+    --sidebar: #141c16;
+    --panel: #19231b;
+    --panel2: #202b22;
+    --border: #2b3a2e;
+    --green: #a4d65e;
+    --text: #edf3eb;
+    --muted: #94a394;
+    --amber: #e4bd70;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px Arial,sans-serif}
-.app{display:flex;min-height:100vh}
-.sidebar{width:225px;flex-shrink:0;background:var(--side);border-right:1px solid var(--line);padding:25px 15px}
-.logo{font-size:22px;font-weight:800}
-.logo span{color:var(--green)}
-.tagline{font-size:11px;color:var(--muted);margin:7px 0 34px}
-.nav-label{font-size:10px;letter-spacing:2px;color:var(--muted);margin:20px 10px 10px}
-.nav button{display:block;width:100%;padding:12px;margin:3px 0;border:0;border-radius:6px;background:transparent;color:#cbd5cb;text-align:left;cursor:pointer}
-.nav button:hover,.nav button.active{background:#293a2b;color:var(--green)}
-main{flex:1;min-width:0;padding:30px 34px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}
-h1{margin:0;font-size:26px}
-.subtitle{color:var(--muted);font-size:12px;margin-top:7px}
-.status{border:1px solid #5a492b;background:#30291e;color:var(--amber);border-radius:20px;padding:9px 12px;font-size:11px}
-.welcome{padding:24px;border:1px solid #3b563b;border-radius:10px;background:linear-gradient(110deg,#263c28,#19271c);margin-bottom:22px}
-.welcome h2{margin:0 0 8px;font-size:20px}
-.welcome p{margin:0;color:#c2d0c0;line-height:1.6}
-.section-title{font-size:15px;font-weight:bold;margin:25px 0 13px}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
-.card,.panel{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:18px}
-.number{font-size:23px;font-weight:bold;color:var(--green)}
-.label{font-size:11px;color:var(--muted);margin-top:7px}
-.panel{margin-top:14px}
-.panel p{color:var(--muted);line-height:1.6}
-.filters{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:17px;margin:17px 0}
-.filter-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.filter-heading strong{font-size:13px}
-.filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.field label{display:block;font-size:10px;color:var(--muted);margin:0 0 6px}
-.field input,.field select{width:100%;min-width:0;background:#111a13;border:1px solid var(--line);border-radius:5px;padding:10px;color:var(--text);font-size:12px}
-.field input:focus,.field select:focus{outline:1px solid var(--green);border-color:var(--green)}
-.search-field{grid-column:span 2}
-.filter-actions{display:flex;align-items:center;gap:12px;margin-top:14px}
-.btn{border:0;border-radius:5px;padding:10px 14px;background:var(--green);color:#101410;font-weight:bold;cursor:pointer}
-.btn.secondary{background:#263429;color:var(--text);border:1px solid var(--line)}
-.results-info{font-size:11px;color:var(--muted);margin-left:auto}
-.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:var(--panel)}
-table{width:100%;border-collapse:collapse;min-width:690px}
-th{text-align:left;font-size:10px;letter-spacing:1px;color:var(--muted);background:#202b22;padding:13px 14px}
-td{padding:14px;border-top:1px solid var(--line);font-size:12px}
-tbody tr{cursor:pointer}
-tbody tr:hover{background:#233126}
-.player-name{font-weight:bold}
-.muted{color:var(--muted)}
-.rating{color:var(--green);font-weight:bold}
-.tag{display:inline-block;padding:4px 7px;border-radius:4px;background:#293a2b;color:#b8d99a;font-size:10px}
-.empty{padding:30px;text-align:center;color:var(--muted)}
-.detail{display:none;margin-top:15px}
-.detail.show{display:block}
-.detail-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.detail h2{margin:0;font-size:20px}
-.detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:15px}
-.stat{background:#121a14;padding:13px;border-radius:6px}
-.stat b{display:block;font-size:19px;color:var(--green);margin-bottom:5px}
-.stat span{font-size:10px;color:var(--muted)}
-.small-btn{border:1px solid var(--line);background:#263429;color:var(--text);padding:8px 11px;border-radius:5px;cursor:pointer}
-.hint{color:var(--muted);font-size:11px;margin:12px 0}
-footer{margin-top:30px;color:#687568;font-size:10px;letter-spacing:1px}
-@media(max-width:900px){.filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:760px){
- .app{display:block}.sidebar{width:100%;padding:15px}
- .tagline{margin-bottom:12px}.nav{display:flex;overflow-x:auto;gap:4px}
- .nav-label{display:none}.nav button{white-space:nowrap;width:auto;padding:10px}
- main{padding:20px 14px}.topbar{align-items:flex-start;flex-direction:column}
- .cards{grid-template-columns:1fr}.detail-grid{grid-template-columns:repeat(2,1fr)}
+
+* {
+    box-sizing: border-box;
 }
-@media(max-width:430px){.filter-grid{grid-template-columns:1fr}.search-field{grid-column:span 1}}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 225px;
+    flex-shrink: 0;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    padding: 25px 15px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: var(--green);
+}
+
+.tagline {
+    font-size: 11px;
+    color: var(--muted);
+    margin: 7px 0 34px;
+}
+
+.nav-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin: 20px 10px 10px;
+}
+
+.nav button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 3px 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #cbd5cb;
+    text-align: left;
+    cursor: pointer;
+}
+
+.nav button:hover,
+.nav button.active {
+    background: #293a2b;
+    color: var(--green);
+}
+
+main {
+    flex: 1;
+    min-width: 0;
+    padding: 30px 34px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 7px;
+}
+
+.status {
+    border: 1px solid #5a492b;
+    background: #30291e;
+    color: var(--amber);
+    border-radius: 20px;
+    padding: 9px 12px;
+    font-size: 11px;
+}
+
+.welcome {
+    padding: 24px;
+    border: 1px solid #3b563b;
+    border-radius: 10px;
+    background: linear-gradient(110deg, #263c28, #19271c);
+    margin-bottom: 22px;
+}
+
+.welcome h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+.welcome p {
+    margin: 0;
+    color: #c2d0c0;
+    line-height: 1.6;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 13px;
+    margin-bottom: 20px;
+}
+
+.card,
+.panel,
+.filters {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 18px;
+}
+
+.number {
+    font-size: 23px;
+    font-weight: bold;
+    color: var(--green);
+}
+
+.label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 7px;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 25px 0 13px;
+}
+
+.filters {
+    margin: 18px 0;
+}
+
+.filter-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-grid,
+.edit-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.field label {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    min-width: 0;
+    background: #111a13;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 10px;
+    color: var(--text);
+    font-size: 12px;
+}
+
+.field input:focus,
+.field select:focus {
+    outline: 1px solid var(--green);
+}
+
+.search-field {
+    grid-column: span 2;
+}
+
+.filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.results-info {
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+}
+
+.btn {
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 14px;
+    background: var(--green);
+    color: #101410;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn.secondary,
+.small-btn {
+    background: #263429;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.small-btn {
+    padding: 8px 11px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 690px;
+    background: var(--panel);
+}
+
+th {
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    background: var(--panel2);
+    padding: 13px;
+}
+
+td {
+    padding: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+}
+
+tbody tr {
+    cursor: pointer;
+}
+
+tbody tr:hover {
+    background: #233126;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+.rating {
+    color: var(--green);
+    font-weight: bold;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.tag {
+    display: inline-block;
+    padding: 4px 7px;
+    border-radius: 4px;
+    background: #293a2b;
+    color: #b8d99a;
+    font-size: 10px;
+}
+
+.empty {
+    padding: 30px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.detail {
+    display: none;
+    margin-top: 15px;
+}
+
+.detail.show {
+    display: block;
+}
+
+.detail-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.detail h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.stat {
+    background: #121a14;
+    padding: 13px;
+    border-radius: 6px;
+}
+
+.stat b {
+    display: block;
+    font-size: 19px;
+    color: var(--green);
+    margin-bottom: 5px;
+}
+
+.stat span {
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.hint {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.history-item {
+    border-top: 1px solid var(--border);
+    padding: 12px 0;
+    font-size: 12px;
+}
+
+.history-item span {
+    color: var(--muted);
+}
+
+.editor-section {
+    color: var(--green);
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000b;
+    z-index: 5;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-box {
+    max-width: 760px;
+    margin: 25px auto;
+    background: #172119;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+}
+
+.modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.modal-head h2 {
+    margin: 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.toast {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #293a2b;
+    border: 1px solid #537447;
+    color: #d9f1c2;
+    padding: 13px 17px;
+    border-radius: 7px;
+    z-index: 8;
+}
+
+.toast.show {
+    display: block;
+}
+
+footer {
+    margin-top: 30px;
+    color: #687568;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+@media(max-width: 900px) {
+    .filter-grid,
+    .edit-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media(max-width: 760px) {
+    .app {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .tagline {
+        margin-bottom: 12px;
+    }
+
+    .nav {
+        display: flex;
+        overflow-x: auto;
+        gap: 4px;
+    }
+
+    .nav-label {
+        display: none;
+    }
+
+    .nav button {
+        white-space: nowrap;
+        width: auto;
+        padding: 10px;
+    }
+
+    main {
+        padding: 20px 14px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 430px) {
+    .filter-grid,
+    .edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-field {
+        grid-column: span 1;
+    }
+}
 </style>
 </head>
+
 <body>
+
 <div class="app">
+
 <aside class="sidebar">
- <div class="logo">OPEN<span>TOUCHLINE</span></div>
- <div class="tagline">Take control of your save.</div>
- <div class="nav-label">MANAGEMENT</div>
- <nav class="nav">
-  <button onclick="showPage('Dashboard',this)">Dashboard</button>
-  <button class="active" onclick="showPage('Players',this)">Players</button>
-  <button onclick="showPage('Staff',this)">Staff</button>
-  <button onclick="showPage('Clubs',this)">Clubs</button>
-  <button onclick="showPage('Competitions',this)">Competitions</button>
-  <button onclick="showPage('Finances',this)">Finances</button>
-  <button onclick="showPage('World',this)">World</button>
-  <button onclick="showPage('History',this)">History</button>
- </nav>
+    <div class="logo">OPEN<span>TOUCHLINE</span></div>
+    <div class="tagline">Take control of your save.</div>
+
+    <div class="nav-label">MANAGEMENT</div>
+
+    <nav class="nav">
+        <button onclick="showPage('Dashboard',this)">Dashboard</button>
+        <button class="active" onclick="showPage('Players',this)">Players</button>
+        <button onclick="showPage('Staff',this)">Staff</button>
+        <button onclick="showPage('Clubs',this)">Clubs</button>
+        <button onclick="showPage('Competitions',this)">Competitions</button>
+        <button onclick="showPage('Finances',this)">Finances</button>
+        <button onclick="showPage('World',this)">World</button>
+        <button onclick="showPage('History',this)">History</button>
+    </nav>
 </aside>
+
 <main>
- <header class="topbar">
-  <div><h1 id="pageTitle">Players</h1><div class="subtitle">Player database and search</div></div>
-  <div class="status">● GAME NOT CONNECTED</div>
- </header>
- <div id="content"></div>
- <footer>OPENTOUCHLINE · FREE AND OPEN SOURCE · PROTOTYPE BUILD</footer>
+
+<header class="topbar">
+    <div>
+        <h1 id="pageTitle">Players</h1>
+        <div class="subtitle">Player database and editor</div>
+    </div>
+    <div class="status">● GAME NOT CONNECTED</div>
+</header>
+
+<div id="content"></div>
+
+<footer>
+    OPENTOUCHLINE · FREE AND OPEN SOURCE · PROTOTYPE BUILD
+</footer>
+
 </main>
 </div>
 
+<div id="editModal" class="modal">
+    <div class="modal-box">
+
+        <div class="modal-head">
+            <h2>Edit player</h2>
+            <button class="small-btn" onclick="closeEditor()">Close ✕</button>
+        </div>
+
+        <form id="editForm">
+
+            <div class="editor-section">PLAYER INFORMATION</div>
+
+            <div class="edit-grid">
+
+                <div class="field">
+                    <label>PLAYER NAME</label>
+                    <input id="eName" required maxlength="50">
+                </div>
+
+                <div class="field">
+                    <label>AGE</label>
+                    <input id="eAge" type="number" min="15" max="50" required>
+                </div>
+
+                <div class="field">
+                    <label>NATIONALITY</label>
+                    <input id="eNation" required maxlength="40">
+                </div>
+
+                <div class="field">
+                    <label>CLUB</label>
+                    <input id="eClub" required maxlength="50">
+                </div>
+
+                <div class="field">
+                    <label>POSITION</label>
+                    <select id="ePos">
+                        <option>GK</option>
+                        <option>CB</option>
+                        <option>LB</option>
+                        <option>RB</option>
+                        <option>DM</option>
+                        <option>CM</option>
+                        <option>AM</option>
+                        <option>LW</option>
+                        <option>RW</option>
+                        <option>ST</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>MARKET VALUE (£M)</label>
+                    <input id="eValue" type="number" min="0" max="1000" required>
+                </div>
+
+                <div class="field">
+                    <label>WEEKLY WAGE (£)</label>
+                    <input id="eWage" type="number" min="0" required>
+                </div>
+
+            </div>
+
+            <div class="editor-section">PLAYER ABILITY</div>
+
+            <div class="edit-grid">
+
+                <div class="field">
+                    <label>CURRENT ABILITY (CA)</label>
+                    <input id="eCa" type="number" min="1" max="200" required>
+                </div>
+
+                <div class="field">
+                    <label>POTENTIAL ABILITY (PA)</label>
+                    <input id="ePa" type="number" min="1" max="200" required>
+                </div>
+
+            </div>
+
+            <div class="editor-section">ATTRIBUTES (1–20)</div>
+
+            <div class="edit-grid">
+
+                <div class="field">
+                    <label>PACE</label>
+                    <input id="ePace" type="number" min="1" max="20" required>
+                </div>
+
+                <div class="field">
+                    <label>SHOOTING</label>
+                    <input id="eShooting" type="number" min="1" max="20" required>
+                </div>
+
+                <div class="field">
+                    <label>PASSING</label>
+                    <input id="ePassing" type="number" min="1" max="20" required>
+                </div>
+
+                <div class="field">
+                    <label>DEFENDING</label>
+                    <input id="eDefending" type="number" min="1" max="20" required>
+                </div>
+
+                <div class="field">
+                    <label>PHYSICAL</label>
+                    <input id="ePhysical" type="number" min="1" max="20" required>
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" type="submit">Save player</button>
+                <button class="btn secondary" type="button" onclick="closeEditor()">Cancel</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
 <script>
-const players = [
- {id:1,name:"Alex Morgan",age:22,nation:"England",club:"Northbridge FC",pos:"ST",ca:148,pa:175,value:42,wage:85000,pace:16,shooting:17,passing:12,defending:6,physical:15,description:"A mobile forward with excellent finishing and room to develop."},
- {id:2,name:"Mateo Silva",age:19,nation:"Portugal",club:"Lisbon Athletic",pos:"AM",ca:132,pa:181,value:28,wage:32000,pace:15,shooting:13,passing:16,defending:7,physical:11,description:"A creative attacking midfielder with exciting potential."},
- {id:3,name:"Noah Williams",age:24,nation:"England",club:"Northbridge FC",pos:"GK",ca:151,pa:160,value:31,wage:70000,pace:9,shooting:2,passing:13,defending:4,physical:15,description:"A reliable goalkeeper who commands his area."},
- {id:4,name:"Luca Bianchi",age:21,nation:"Italy",club:"Calcio Torino",pos:"CB",ca:139,pa:169,value:35,wage:54000,pace:13,shooting:5,passing:12,defending:16,physical:15,description:"A composed centre-back with strong defensive instincts."},
- {id:5,name:"Ethan Okafor",age:18,nation:"Nigeria",club:"Northbridge FC",pos:"RW",ca:118,pa:184,value:19,wage:18000,pace:18,shooting:12,passing:12,defending:5,physical:13,description:"A young winger with explosive pace and high potential."},
- {id:6,name:"Jonas Berg",age:27,nation:"Norway",club:"Hammarby IF",pos:"CM",ca:145,pa:151,value:17,wage:48000,pace:12,shooting:11,passing:15,defending:13,physical:14,description:"A well-rounded central midfielder."},
- {id:7,name:"Rafael Costa",age:20,nation:"Brazil",club:"Santos Azul",pos:"LB",ca:127,pa:172,value:23,wage:26000,pace:16,shooting:7,passing:13,defending:13,physical:12,description:"An adventurous full-back with plenty of development ahead."},
- {id:8,name:"Milan Petrovic",age:25,nation:"Serbia",club:"Red Star Belgrade",pos:"DM",ca:153,pa:158,value:26,wage:62000,pace:11,shooting:9,passing:14,defending:16,physical:16,description:"A disciplined defensive midfielder and ball winner."}
+
+const starterPlayers = [
+
+{
+id:1,name:"Alex Morgan",age:22,nation:"England",
+club:"Northbridge FC",pos:"ST",ca:148,pa:175,
+value:42,wage:85000,pace:16,shooting:17,
+passing:12,defending:6,physical:15
+},
+
+{
+id:2,name:"Mateo Silva",age:19,nation:"Portugal",
+club:"Lisbon Athletic",pos:"AM",ca:132,pa:181,
+value:28,wage:32000,pace:15,shooting:13,
+passing:16,defending:7,physical:11
+},
+
+{
+id:3,name:"Noah Williams",age:24,nation:"England",
+club:"Northbridge FC",pos:"GK",ca:151,pa:160,
+value:31,wage:70000,pace:9,shooting:2,
+passing:13,defending:4,physical:15
+},
+
+{
+id:4,name:"Luca Bianchi",age:21,nation:"Italy",
+club:"Calcio Torino",pos:"CB",ca:139,pa:169,
+value:35,wage:54000,pace:13,shooting:5,
+passing:12,defending:16,physical:15
+},
+
+{
+id:5,name:"Ethan Okafor",age:18,nation:"Nigeria",
+club:"Northbridge FC",pos:"RW",ca:118,pa:184,
+value:19,wage:18000,pace:18,shooting:12,
+passing:12,defending:5,physical:13
+},
+
+{
+id:6,name:"Jonas Berg",age:27,nation:"Norway",
+club:"Hammarby IF",pos:"CM",ca:145,pa:151,
+value:17,wage:48000,pace:12,shooting:11,
+passing:15,defending:13,physical:14
+},
+
+{
+id:7,name:"Rafael Costa",age:20,nation:"Brazil",
+club:"Santos Azul",pos:"LB",ca:127,pa:172,
+value:23,wage:26000,pace:16,shooting:7,
+passing:13,defending:13,physical:12
+},
+
+{
+id:8,name:"Milan Petrovic",age:25,nation:"Serbia",
+club:"Red Star Belgrade",pos:"DM",ca:153,pa:158,
+value:26,wage:62000,pace:11,shooting:9,
+passing:14,defending:16,physical:16
+}
+
 ];
 
-function dashboard(){
- return '<section class="welcome"><h2>Welcome to OpenTouchline</h2><p>Your save. Your decisions. Your touchline. Manage your football world from one place.</p></section><div class="cards"><div class="card"><div class="number">—</div><div class="label">Players loaded</div></div><div class="card"><div class="number">—</div><div class="label">Clubs loaded</div></div><div class="card"><div class="number">OFFLINE</div><div class="label">Game connection</div></div></div><div class="panel"><b>Football Manager 27</b><p>This is currently a standalone interface prototype. Game detection and save editing will be developed separately.</p></div>';
+const PLAYER_KEY = "opentouchline_players_v1";
+const HISTORY_KEY = "opentouchline_history_v1";
+
+let players = loadPlayers();
+let history = loadHistory();
+let editingId = null;
+
+function loadPlayers() {
+    try {
+        const saved = localStorage.getItem(PLAYER_KEY);
+        return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(starterPlayers));
+    } catch (error) {
+        return JSON.parse(JSON.stringify(starterPlayers));
+    }
 }
 
-function playerPage(){
- return '<section class="welcome"><h2>Player database</h2><p>Search and explore players using multiple filters. These are fictional demo players, not data from your save.</p></section>'+
- '<div class="cards"><div class="card"><div class="number">'+players.length+'</div><div class="label">Demo players</div></div><div class="card"><div class="number">10</div><div class="label">Position categories</div></div><div class="card"><div class="number">—</div><div class="label">Save connection</div></div></div>'+
- '<section class="filters"><div class="filter-heading"><strong>Search and filters</strong><button class="small-btn" onclick="clearFilters()">Clear all</button></div>'+
- '<div class="filter-grid">'+
- '<div class="field search-field"><label>PLAYER SEARCH</label><input id="search" placeholder="Name, club or nationality..." oninput="renderPlayers()"></div>'+
- '<div class="field"><label>POSITION</label><select id="position" onchange="renderPlayers()"><option value="">All positions</option><option>GK</option><option>CB</option><option>LB</option><option>RB</option><option>DM</option><option>CM</option><option>AM</option><option>LW</option><option>RW</option><option>ST</option></select></div>'+
- '<div class="field"><label>NATIONALITY</label><select id="nation" onchange="renderPlayers()"><option value="">All nationalities</option></select></div>'+
- '<div class="field"><label>CLUB</label><select id="club" onchange="renderPlayers()"><option value="">All clubs</option></select></div>'+
- '<div class="field"><label>MINIMUM AGE</label><input id="ageMin" type="number" min="15" max="50" placeholder="Any" oninput="renderPlayers()"></div>'+
- '<div class="field"><label>MAXIMUM AGE</label><input id="ageMax" type="number" min="15" max="50" placeholder="Any" oninput="renderPlayers()"></div>'+
- '<div class="field"><label>MINIMUM CA</label><input id="caMin" type="number" min="1" max="200" placeholder="Any" oninput="renderPlayers()"></div>'+
- '<div class="field"><label>MINIMUM PA</label><input id="paMin" type="number" min="1" max="200" placeholder="Any" oninput="renderPlayers()"></div>'+
- '<div class="field"><label>MINIMUM VALUE (£M)</label><input id="valueMin" type="number" min="0" placeholder="Any" oninput="renderPlayers()"></div>'+
- '<div class="field"><label>MAXIMUM VALUE (£M)</label><input id="valueMax" type="number" min="0" placeholder="Any" oninput="renderPlayers()"></div>'+
- '<div class="field"><label>SORT BY</label><select id="sort" onchange="renderPlayers()"><option value="name">Name</option><option value="age">Age</option><option value="ca">Current ability</option><option value="pa">Potential ability</option><option value="value">Market value</option></select></div>'+
- '<div class="field"><label>SORT ORDER</label><select id="order" onchange="renderPlayers()"><option value="asc">Ascending</option><option value="desc">Descending</option></select></div>'+
- '</div><div class="filter-actions"><button class="btn secondary" onclick="clearFilters()">Reset filters</button><span class="results-info" id="resultsInfo"></span></div></section>'+
- '<div class="section-title">Player results</div><div id="playerResults"></div><div id="playerDetail" class="detail"></div>'+
- '<p class="hint">Select a player to view their profile. All sample data is fictional.</p>';
+function loadHistory() {
+    try {
+        return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+    } catch (error) {
+        return [];
+    }
 }
 
-function fillOptions(){
- const nations=[...new Set(players.map(p=>p.nation))].sort();
- const clubs=[...new Set(players.map(p=>p.club))].sort();
- document.getElementById("nation").innerHTML='<option value="">All nationalities</option>'+nations.map(n=>'<option>'+n+'</option>').join("");
- document.getElementById("club").innerHTML='<option value="">All clubs</option>'+clubs.map(c=>'<option>'+c+'</option>').join("");
+function saveData() {
+    try {
+        localStorage.setItem(PLAYER_KEY, JSON.stringify(players));
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (error) {
+        alert("Could not save to browser storage.");
+    }
 }
 
-function renderPlayers(){
- const get=id=>document.getElementById(id);
- const search=get("search").value.toLowerCase().trim();
- const position=get("position").value;
- const nation=get("nation").value;
- const club=get("club").value;
- const ageMin=Number(get("ageMin").value)||0;
- const ageMax=Number(get("ageMax").value)||999;
- const caMin=Number(get("caMin").value)||0;
- const paMin=Number(get("paMin").value)||0;
- const valueMin=get("valueMin").value===""?0:Number(get("valueMin").value);
- const valueMax=get("valueMax").value===""?Infinity:Number(get("valueMax").value);
- const sort=get("sort").value;
- const direction=get("order").value==="asc"?1:-1;
-
- let results=players.filter(p=>{
-  const matchesSearch=(p.name+" "+p.club+" "+p.nation).toLowerCase().includes(search);
-  return matchesSearch && (!position||p.pos===position) &&
-   (!nation||p.nation===nation) && (!club||p.club===club) &&
-   p.age>=ageMin && p.age<=ageMax && p.ca>=caMin &&
-   p.pa>=paMin && p.value>=valueMin && p.value<=valueMax;
- });
- results.sort((a,b)=>{
-  const av=a[sort],bv=b[sort];
-  return typeof av==="string"?av.localeCompare(bv)*direction:(av-bv)*direction;
- });
-
- get("resultsInfo").textContent=results.length+" player(s) found";
- if(!results.length){
-  get("playerResults").innerHTML='<div class="table-wrap empty">No players match those filters. Try changing your search.</div>';
-  get("playerDetail").classList.remove("show");
-  return;
- }
- get("playerResults").innerHTML='<div class="table-wrap"><table><thead><tr><th>PLAYER</th><th>AGE</th><th>NATION</th><th>CLUB</th><th>POSITION</th><th>CA</th><th>PA</th><th>VALUE</th></tr></thead><tbody>'+
- results.map(p=>'<tr onclick="showPlayer('+p.id+')"><td class="player-name">'+p.name+'</td><td>'+p.age+'</td><td>'+p.nation+'</td><td class="muted">'+p.club+'</td><td><span class="tag">'+p.pos+'</span></td><td class="rating">'+p.ca+'</td><td class="rating">'+p.pa+'</td><td>£'+p.value+'M</td></tr>').join("")+
- '</tbody></table></div>';
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, function(char) {
+        return {
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#39;"
+        }[char];
+    });
 }
 
-function showPlayer(id){
- const p=players.find(x=>x.id===id);
- const detail=document.getElementById("playerDetail");
- detail.innerHTML='<div class="panel"><div class="detail-head"><div><h2>'+p.name+'</h2><div class="muted">'+p.age+' · '+p.nation+' · '+p.club+'</div></div><button class="small-btn" onclick="closePlayer()">Close profile ✕</button></div>'+
- '<div class="hint"><span class="tag">'+p.pos+'</span> '+p.description+'</div>'+
- '<div class="detail-grid">'+
- '<div class="stat"><b>'+p.ca+'</b><span>Current ability</span></div>'+
- '<div class="stat"><b>'+p.pa+'</b><span>Potential ability</span></div>'+
- '<div class="stat"><b>£'+p.value+'M</b><span>Estimated value</span></div>'+
- '<div class="stat"><b>£'+p.wage.toLocaleString()+'</b><span>Weekly wage</span></div>'+
- '<div class="stat"><b>'+p.pace+'</b><span>Pace</span></div>'+
- '<div class="stat"><b>'+p.shooting+'</b><span>Shooting</span></div>'+
- '<div class="stat"><b>'+p.passing+'</b><span>Passing</span></div>'+
- '<div class="stat"><b>'+p.defending+'</b><span>Defending</span></div>'+
- '<div class="stat"><b>'+p.physical+'</b><span>Physical</span></div>'+
- '</div><p class="hint">Demo profile only. Editing and live save data are not connected yet.</p></div>';
- detail.classList.add("show");
- detail.scrollIntoView({behavior:"smooth",block:"nearest"});
+function dashboard() {
+    return `
+    <section class="welcome">
+        <h2>Welcome to OpenTouchline</h2>
+        <p>Your save. Your decisions. Your touchline.</p>
+    </section>
+
+    <div class="cards">
+        <div class="card">
+            <div class="number">${players.length}</div>
+            <div class="label">Players in database</div>
+        </div>
+
+        <div class="card">
+            <div class="number">${history.length}</div>
+            <div class="label">Recorded edits</div>
+        </div>
+
+        <div class="card">
+            <div class="number">OFFLINE</div>
+            <div class="label">Game connection</div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <strong>Football Manager 27</strong>
+        <p>This is currently a standalone prototype. Player changes are stored in this browser only. No FM save file is connected.</p>
+    </div>`;
 }
 
-function closePlayer(){
- const d=document.getElementById("playerDetail");
- d.classList.remove("show");
- d.innerHTML="";
+function playerPage() {
+    return `
+    <section class="welcome">
+        <h2>Player database</h2>
+        <p>Search, filter and edit players. These are fictional demonstration players, not data from your save.</p>
+    </section>
+
+    <div class="cards">
+        <div class="card">
+            <div class="number">${players.length}</div>
+            <div class="label">Players in database</div>
+        </div>
+
+        <div class="card">
+            <div class="number">${history.length}</div>
+            <div class="label">Recorded edits</div>
+        </div>
+
+        <div class="card">
+            <div class="number">LOCAL</div>
+            <div class="label">Browser storage</div>
+        </div>
+    </div>
+
+    <section class="filters">
+
+        <div class="filter-heading">
+            <strong>Search and filters</strong>
+            <button class="small-btn" onclick="clearFilters()">Clear all</button>
+        </div>
+
+        <div class="filter-grid">
+
+            <div class="field search-field">
+                <label>PLAYER SEARCH</label>
+                <input id="search" placeholder="Name, club or nationality..." oninput="renderPlayers()">
+            </div>
+
+            <div class="field">
+                <label>POSITION</label>
+                <select id="position" onchange="renderPlayers()">
+                    <option value="">All positions</option>
+                    <option>GK</option>
+                    <option>CB</option>
+                    <option>LB</option>
+                    <option>RB</option>
+                    <option>DM</option>
+                    <option>CM</option>
+                    <option>AM</option>
+                    <option>LW</option>
+                    <option>RW</option>
+                    <option>ST</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>NATIONALITY</label>
+                <select id="nation" onchange="renderPlayers()"></select>
+            </div>
+
+            <div class="field">
+                <label>CLUB</label>
+                <select id="club" onchange="renderPlayers()"></select>
+            </div>
+
+            <div class="field">
+                <label>MINIMUM AGE</label>
+                <input id="ageMin" type="number" placeholder="Any" oninput="renderPlayers()">
+            </div>
+
+            <div class="field">
+                <label>MAXIMUM AGE</label>
+                <input id="ageMax" type="number" placeholder="Any" oninput="renderPlayers()">
+            </div>
+
+            <div class="field">
+                <label>MINIMUM CA</label>
+                <input id="caMin" type="number" placeholder="Any" oninput="renderPlayers()">
+            </div>
+
+            <div class="field">
+                <label>MINIMUM PA</label>
+                <input id="paMin" type="number" placeholder="Any" oninput="renderPlayers()">
+            </div>
+
+            <div class="field">
+                <label>MINIMUM VALUE (£M)</label>
+                <input id="valueMin" type="number" placeholder="Any" oninput="renderPlayers()">
+            </div>
+
+            <div class="field">
+                <label>MAXIMUM VALUE (£M)</label>
+                <input id="valueMax" type="number" placeholder="Any" oninput="renderPlayers()">
+            </div>
+
+            <div class="field">
+                <label>SORT BY</label>
+                <select id="sort" onchange="renderPlayers()">
+                    <option value="name">Name</option>
+                    <option value="age">Age</option>
+                    <option value="ca">Current ability</option>
+                    <option value="pa">Potential ability</option>
+                    <option value="value">Market value</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>SORT ORDER</label>
+                <select id="order" onchange="renderPlayers()">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="filter-actions">
+            <button class="btn secondary" onclick="clearFilters()">Reset filters</button>
+            <span class="results-info" id="resultsInfo"></span>
+        </div>
+
+    </section>
+
+    <div class="section-title">Player results</div>
+    <div id="playerResults"></div>
+
+    <div id="playerDetail" class="detail"></div>
+
+    <div class="section-title">Edit history</div>
+    <div class="panel" id="historyPanel"></div>
+
+    <p class="hint">Select a player to view their profile. Changes are saved in this browser.</p>`;
 }
 
-function clearFilters(){
- ["search","position","nation","club","ageMin","ageMax","caMin","paMin","valueMin","valueMax"].forEach(id=>document.getElementById(id).value="");
- document.getElementById("sort").value="name";
- document.getElementById("order").value="asc";
- closePlayer();
- renderPlayers();
+function fillOptions() {
+    const nations = [...new Set(players.map(p => p.nation))].sort();
+    const clubs = [...new Set(players.map(p => p.club))].sort();
+
+    document.getElementById("nation").innerHTML =
+        '<option value="">All nationalities</option>' +
+        nations.map(n => `<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join("");
+
+    document.getElementById("club").innerHTML =
+        '<option value="">All clubs</option>' +
+        clubs.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
 }
 
-function showPage(page,button){
- document.getElementById("pageTitle").textContent=page;
- document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- const content=document.getElementById("content");
- if(page==="Players"){
-  content.innerHTML=playerPage();
-  fillOptions();
-  renderPlayers();
- }else if(page==="Dashboard"){
-  content.innerHTML=dashboard();
- }else{
-  content.innerHTML='<section class="welcome"><h2>'+page+'</h2><p>The '+page.toLowerCase()+' management section is planned for a future update.</p></section><div class="panel"><b>Coming soon</b><p>This section will become functional as we continue building OpenTouchline.</p></div>';
- }
+function renderPlayers() {
+    const get = id => document.getElementById(id);
+
+    const search = get("search").value.toLowerCase().trim();
+    const position = get("position").value;
+    const nation = get("nation").value;
+    const club = get("club").value;
+
+    const min = id => get(id).value === "" ? 0 : Number(get(id).value);
+    const max = (id, fallback) => get(id).value === "" ? fallback : Number(get(id).value);
+
+    let results = players.filter(p => {
+        const searchMatch =
+            (p.name + " " + p.club + " " + p.nation)
+            .toLowerCase()
+            .includes(search);
+
+        return searchMatch &&
+            (!position || p.pos === position) &&
+            (!nation || p.nation === nation) &&
+            (!club || p.club === club) &&
+            p.age >= min("ageMin") &&
+            p.age <= max("ageMax", 999) &&
+            p.ca >= min("caMin") &&
+            p.pa >= min("paMin") &&
+            p.value >= min("valueMin") &&
+            p.value <= max("valueMax", Infinity);
+    });
+
+    const sort = get("sort").value;
+    const direction = get("order").value === "asc" ? 1 : -1;
+
+    results.sort((a, b) => {
+        if (typeof a[sort] === "string") {
+            return a[sort].localeCompare(b[sort]) * direction;
+        }
+        return (a[sort] - b[sort]) * direction;
+    });
+
+    get("resultsInfo").textContent = results.length + " player(s) found";
+
+    if (!results.length) {
+        get("playerResults").innerHTML =
+            '<div class="table-wrap empty">No players match those filters.</div>';
+        get("playerDetail").classList.remove("show");
+        return;
+    }
+
+    get("playerResults").innerHTML = `
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>PLAYER</th>
+                    <th>AGE</th>
+                    <th>NATION</th>
+                    <th>CLUB</th>
+                    <th>POSITION</th>
+                    <th>CA</th>
+                    <th>PA</th>
+                    <th>VALUE</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${results.map(p => `
+                    <tr onclick="showPlayer(${p.id})">
+                        <td class="player-name">${escapeHTML(p.name)}</td>
+                        <td>${p.age}</td>
+                        <td>${escapeHTML(p.nation)}</td>
+                        <td class="muted">${escapeHTML(p.club)}</td>
+                        <td><span class="tag">${escapeHTML(p.pos)}</span></td>
+                        <td class="rating">${p.ca}</td>
+                        <td class="rating">${p.pa}</td>
+                        <td>£${p.value}M</td>
+                    </tr>
+                `).join("")}
+            </tbody>
+        </table>
+    </div>`;
 }
 
-document.getElementById("content").innerHTML=playerPage();
+function showPlayer(id) {
+    const p = players.find(player => player.id === id);
+    if (!p) return;
+
+    const detail = document.getElementById("playerDetail");
+
+    detail.innerHTML = `
+    <div class="panel">
+
+        <div class="detail-head">
+            <div>
+                <h2>${escapeHTML(p.name)}</h2>
+                <div class="muted">
+                    ${p.age} · ${escapeHTML(p.nation)} · ${escapeHTML(p.club)}
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" onclick="openEditor(${p.id})">Edit player</button>
+                <button class="small-btn" onclick="closePlayer()">Close ✕</button>
+            </div>
+        </div>
+
+        <div class="hint">
+            <span class="tag">${escapeHTML(p.pos)}</span>
+            Player profile
+        </div>
+
+        <div class="detail-grid">
+            <div class="stat"><b>${p.ca}</b><span>Current ability</span></div>
+            <div class="stat"><b>${p.pa}</b><span>Potential ability</span></div>
+            <div class="stat"><b>£${p.value}M</b><span>Market value</span></div>
+            <div class="stat"><b>£${Number(p.wage).toLocaleString()}</b><span>Weekly wage</span></div>
+            <div class="stat"><b>${p.pace}</b><span>Pace</span></div>
+            <div class="stat"><b>${p.shooting}</b><span>Shooting</span></div>
+            <div class="stat"><b>${p.passing}</b><span>Passing</span></div>
+            <div class="stat"><b>${p.defending}</b><span>Defending</span></div>
+            <div class="stat"><b>${p.physical}</b><span>Physical</span></div>
+        </div>
+
+        <p class="hint">Demo profile. Changes are stored locally in this browser, not in Football Manager.</p>
+    </div>`;
+
+    detail.classList.add("show");
+    detail.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+function closePlayer() {
+    const detail = document.getElementById("playerDetail");
+    detail.classList.remove("show");
+    detail.innerHTML = "";
+}
+
+function openEditor(id) {
+    const p = players.find(player => player.id === id);
+    if (!p) return;
+
+    editingId = id;
+
+    const fields = {
+        eName:"name",
+        eAge:"age",
+        eNation:"nation",
+        eClub:"club",
+        ePos:"pos",
+        eValue:"value",
+        eWage:"wage",
+        eCa:"ca",
+        ePa:"pa",
+        ePace:"pace",
+        eShooting:"shooting",
+        ePassing:"passing",
+        eDefending:"defending",
+        ePhysical:"physical"
+    };
+
+    Object.entries(fields).forEach(([element, property]) => {
+        document.getElementById(element).value = p[property];
+    });
+
+    document.getElementById("editModal").classList.add("show");
+}
+
+function closeEditor() {
+    document.getElementById("editModal").classList.remove("show");
+    editingId = null;
+}
+
+document.getElementById("editForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const index = players.findIndex(p => p.id === editingId);
+    if (index === -1) return;
+
+    const oldPlayer = {...players[index]};
+
+    const updatedPlayer = {
+        ...oldPlayer,
+        name:document.getElementById("eName").value.trim(),
+        age:Number(document.getElementById("eAge").value),
+        nation:document.getElementById("eNation").value.trim(),
+        club:document.getElementById("eClub").value.trim(),
+        pos:document.getElementById("ePos").value,
+        value:Number(document.getElementById("eValue").value),
+        wage:Number(document.getElementById("eWage").value),
+        ca:Number(document.getElementById("eCa").value),
+        pa:Number(document.getElementById("ePa").value),
+        pace:Number(document.getElementById("ePace").value),
+        shooting:Number(document.getElementById("eShooting").value),
+        passing:Number(document.getElementById("ePassing").value),
+        defending:Number(document.getElementById("eDefending").value),
+        physical:Number(document.getElementById("ePhysical").value)
+    };
+
+    if (updatedPlayer.pa < updatedPlayer.ca) {
+        alert("Potential Ability cannot be lower than Current Ability in this prototype.");
+        return;
+    }
+
+    history.unshift({
+        id:Date.now(),
+        playerId:editingId,
+        playerName:oldPlayer.name,
+        before:oldPlayer,
+        after:{...updatedPlayer},
+        date:new Date().toLocaleString()
+    });
+
+    if (history.length > 50) {
+        history = history.slice(0, 50);
+    }
+
+    players[index] = updatedPlayer;
+
+    saveData();
+    closeEditor();
+    refreshPlayers();
+    showPlayer(editingId);
+    showToast("Player changes saved!");
+});
+
+function clearFilters() {
+    const ids = [
+        "search","position","nation","club",
+        "ageMin","ageMax","caMin","paMin",
+        "valueMin","valueMax"
+    ];
+
+    ids.forEach(id => {
+        document.getElementById(id).value = "";
+    });
+
+    document.getElementById("sort").value = "name";
+    document.getElementById("order").value = "asc";
+
+    closePlayer();
+    renderPlayers();
+}
+
+function renderHistory() {
+    const panel = document.getElementById("historyPanel");
+
+    if (!history.length) {
+        panel.innerHTML = '<p class="hint">No player edits yet. Changes will appear here.</p>';
+        return;
+    }
+
+    panel.innerHTML = history.map(item => `
+        <div class="history-item">
+            <strong>${escapeHTML(item.playerName)}</strong>
+            <span> edited · ${escapeHTML(item.date)}</span>
+        </div>
+    `).join("") + `
+        <div class="actions">
+            <button class="btn secondary" onclick="undoLastEdit()">Undo latest edit</button>
+        </div>
+    `;
+}
+
+function undoLastEdit() {
+    if (!history.length) return;
+
+    const latest = history.shift();
+    const index = players.findIndex(p => p.id === latest.playerId);
+
+    if (index !== -1) {
+        players[index] = latest.before;
+    }
+
+    saveData();
+    refreshPlayers();
+    showToast("Latest edit undone.");
+}
+
+function refreshPlayers() {
+    const currentPage = document.getElementById("pageTitle").textContent;
+
+    if (currentPage === "Players") {
+        const nation = document.getElementById("nation").value;
+        const club = document.getElementById("club").value;
+
+        fillOptions();
+
+        if ([...document.getElementById("nation").options].some(o => o.value === nation)) {
+            document.getElementById("nation").value = nation;
+        }
+
+        if ([...document.getElementById("club").options].some(o => o.value === club)) {
+            document.getElementById("club").value = club;
+        }
+
+        renderPlayers();
+        renderHistory();
+        updatePlayerCount();
+    }
+}
+
+function updatePlayerCount() {
+    const number = document.querySelector(".cards .number");
+    if (number) number.textContent = players.length;
+}
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2500);
+}
+
+function showPage(page, button) {
+    document.getElementById("pageTitle").textContent = page;
+
+    document.querySelectorAll(".nav button").forEach(b => {
+        b.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    const content = document.getElementById("content");
+
+    if (page === "Players") {
+        content.innerHTML = playerPage();
+        fillOptions();
+        renderPlayers();
+        renderHistory();
+    } else if (page === "Dashboard") {
+        content.innerHTML = dashboard();
+    } else if (page === "History") {
+        content.innerHTML = `
+            <section class="welcome">
+                <h2>Edit history</h2>
+                <p>Review player changes made in this browser.</p>
+            </section>
+            <div class="panel" id="historyPanel"></div>
+        `;
+        renderHistory();
+    } else {
+        content.innerHTML = `
+            <section class="welcome">
+                <h2>${escapeHTML(page)}</h2>
+                <p>The ${escapeHTML(page.toLowerCase())} management section is planned for a future update.</p>
+            </section>
+            <div class="panel">
+                <strong>Coming soon</strong>
+                <p>We are building OpenTouchline one module at a time.</p>
+            </div>
+        `;
+    }
+}
+
+document.getElementById("content").innerHTML = playerPage();
+
 fillOptions();
 renderPlayers();
+renderHistory();
+
 </script>
+
 </body>
 </html>
